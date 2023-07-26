@@ -1,5 +1,5 @@
 package gitlet;
-
+import gitlet.stage_object.*;
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
  */
