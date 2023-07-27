@@ -18,19 +18,24 @@ public class gitlet_add {
             System.exit(0);
         }
         obj = new stage_object(input_timestamp, input_message,input_file_ref);
+    }
+    public void add(){
+        File file_tmp = join(STAGE_DIR, "stage_object");
+        String file_content = Utils.readContentsAsString(obj.file_ref);
+        String file_hash = Utils.sha1(file_content);
         if(STAGE_DIR.mkdir()){
-            File file_tmp = join(STAGE_DIR, "stage_object");
-            obj.set_file_blobs(Utils.readContentsAsString(obj.file_ref));
+            obj.set_file_hash(file_hash);
             Utils.writeObject(file_tmp, obj);
+            Utils.writeContents(join(STAGE_DIR, file_hash), file_content);
         }else{
             // current version is the same with the one in the stage, don't add it
-            File file_tmp = join(STAGE_DIR, "stage_object");
             stage_object obj_tmp = Utils.readObject(file_tmp, stage_object.class);
-            obj.set_file_blobs(Utils.readContentsAsString(obj.file_ref));
-            if (!(Utils.sha1(obj.file_blobs)==Utils.sha1(obj_tmp.file_blobs))){
-
+            if (!(obj_tmp.file_hash.equals(file_hash))){
+                join(STAGE_DIR, obj_tmp.file_hash).delete();
+                obj.set_file_hash(file_hash);
+                Utils.writeObject(file_tmp, obj);
+                Utils.writeContents(join(STAGE_DIR, file_hash), file_content);
             }
         }
-
     }
 }

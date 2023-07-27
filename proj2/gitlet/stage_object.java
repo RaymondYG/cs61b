@@ -10,7 +10,7 @@ public class stage_object implements Dumpable{
     public Date timestamp;
     public String message;
     public File file_ref;
-    public String file_blobs;
+    public String file_hash;
     public stage_object(){
         this.timestamp = new Date();
         this.timestamp.setTime(0);
@@ -23,7 +23,7 @@ public class stage_object implements Dumpable{
         this.message = input_message;
         this.file_ref = input_file_ref;
     }
-    public void set_file_blobs(String contents){
-        this.file_blobs = contents;
+    public void set_file_hash(String hash){
+        this.file_hash = hash;
     }
 }
