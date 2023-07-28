@@ -8,20 +8,18 @@ import java.util.List;
 public class stage_object implements Dumpable{
     public void dump() {}
     public Date timestamp;
-    public String message;
     public File file_ref;
     public String file_hash;
-    public stage_object(){
-        this.timestamp = new Date();
-        this.timestamp.setTime(0);
-        this.message = "initial commit";
-        this.file_ref = null;
-    }
 
-    public stage_object(Date input_timestamp, String input_message, File input_file_ref){
+    public String file_name;
+
+
+    public stage_object(Date input_timestamp,
+                        File input_file_ref,
+                        String input_file_name){
         this.timestamp = input_timestamp;
-        this.message = input_message;
         this.file_ref = input_file_ref;
+        this.file_name = input_file_name;
     }
     public void set_file_hash(String hash){
         this.file_hash = hash;
