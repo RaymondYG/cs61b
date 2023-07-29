@@ -34,11 +34,14 @@ public class commit_object implements Dumpable{
             return true;
         }
         else if(file_ref_dict.containsKey(stage_add.file_name)){
-            if (file_ref_dict.get(stage_add.file_name) != stage_add.file_hash){
+            if (!file_ref_dict.get(stage_add.file_name).equals(stage_add.file_hash)){
                 file_ref_dict.put(stage_add.file_name, stage_add.file_hash);
                 file_transfer(stage_add.file_hash);
                 destroy_stage();
                 return true;
+            }else{
+                destroy_stage();
+                return false;
             }
         }else{
             file_ref_dict.put(stage_add.file_name, stage_add.file_hash);
@@ -46,8 +49,7 @@ public class commit_object implements Dumpable{
             destroy_stage();
             return true;
         }
-        destroy_stage();
-        return false;
+
 
     }
     public void setter_time(Date time){
@@ -57,8 +59,12 @@ public class commit_object implements Dumpable{
         this.message = message;
     }
     public static void file_transfer(String file_hash){
-        File file_path = join(new File(System.getProperty("user.dir")), ".gitlet",".stage", file_hash);
-        file_path.renameTo(join(new File(System.getProperty("user.dir")), ".gitlet", file_hash));
+        File gitlet =join(new File(System.getProperty("user.dir")), ".gitlet");
+        File stage = join(gitlet, ".stage");
+        File file_folder = join(gitlet, ".file");
+        file_folder.mkdir();
+        File file_path = join(file_folder, file_hash);
+        join(stage, file_hash).renameTo(file_path);
     }
     public static void destroy_stage(){
         File folder = join(new File(System.getProperty("user.dir")), ".gitlet",".stage");

@@ -20,6 +20,9 @@ public class gitlet_add {
         }
         obj = new stage_object(input_timestamp,input_file_ref,input_file_name);
     }
+    public void set_remove(){
+        obj.remove = true;
+    }
     public void add(){
 
         File file_tmp = join(STAGE_DIR, "stage_object");
@@ -32,7 +35,7 @@ public class gitlet_add {
         }else{
             // current version is the same with the one in the stage, don't add it
             stage_object obj_tmp = Utils.readObject(file_tmp, stage_object.class);
-            if (!(obj_tmp.file_hash.equals(file_hash))){
+            if (!(obj_tmp.file_hash.equals(file_hash)) || (obj_tmp.file_hash.equals(file_hash) && obj_tmp.remove != obj.remove)){
                 join(STAGE_DIR, obj_tmp.file_hash).delete();
                 obj.set_file_hash(file_hash);
                 Utils.writeObject(file_tmp, obj);

@@ -12,7 +12,7 @@ public class stage_object implements Dumpable{
     public String file_hash;
 
     public String file_name;
-
+    public boolean remove = false;
 
     public stage_object(Date input_timestamp,
                         File input_file_ref,
@@ -20,6 +20,9 @@ public class stage_object implements Dumpable{
         this.timestamp = input_timestamp;
         this.file_ref = input_file_ref;
         this.file_name = input_file_name;
+    }
+    public void setter_rm(boolean input_remove){
+        this.remove = input_remove;
     }
     public void set_file_hash(String hash){
         this.file_hash = hash;

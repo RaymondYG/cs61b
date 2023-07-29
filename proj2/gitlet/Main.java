@@ -3,6 +3,8 @@ import gitlet.stage_object.*;
 import gitlet.gitlet_add.*;
 import gitlet.commit_object.*;
 import gitlet.Commit.*;
+import gitlet.gitlet_rm.*;
+import gitlet.gitlet_log.*;
 import java.io.File;
 import java.util.Date;
 
@@ -57,18 +59,48 @@ public class Main {
                                                 ".stage",
                                                 "stage_object"),
                                                 stage_object.class);
+
                 String parent_hash = Utils.readContentsAsString(join(new File(System.getProperty("user.dir")), ".gitlet","header"));
                 commit_object parent_commit = Utils.readObject(join(System.getProperty("user.dir"),
                                 ".gitlet",
                                 parent_hash),
                                 commit_object.class);
-                commit_object tmp_commit = new commit_object(parent_commit.timestamp,
-                        parent_commit.message,
-                        parent_commit.parent_ref,
-                        parent_commit.file_ref_dict);
-                if (tmp_commit.update_by_stage(obj_tmp)){
-                    Commit.dump_header(Commit.dump_commit(tmp_commit));
+                if (obj_tmp.remove){
+                    parent_commit.file_ref_dict.remove(obj_tmp.file_name);
+                    parent_commit.parent_ref = parent_hash;
+                    parent_commit.message = args[1];
+                    parent_commit.timestamp = new Date();
+                    Commit.dump_header(Commit.dump_commit(parent_commit));
+                    commit_object.destroy_stage();
+
+                }else{
+                    commit_object tmp_commit = new commit_object(parent_commit.timestamp,
+                            parent_commit.message,
+                            parent_commit.parent_ref,
+                            parent_commit.file_ref_dict);
+                    if (tmp_commit.update_by_stage(obj_tmp)){
+                        tmp_commit.parent_ref = parent_hash;
+                        tmp_commit.message = args[1];
+                        Commit.dump_header(Commit.dump_commit(tmp_commit));
+                    }
                 }
+                break;
+            case "rm":
+                validateNumArgs("rm", args, 2);
+                gitlet_rm tmp_rm = new gitlet_rm();
+                tmp_rm.rm(args[1]);
+                break;
+            case "log":
+                validateNumArgs("rm", args, 1);
+                gitlet_log.log();
+                break;
+            case "global-log":
+                validateNumArgs("global-log", 1);
+                gitlet_log.global_log();
+                break;
+            case "find":
+                validateNumArgs("find", 2);
+                gitlet_log.find(args[1]);
         }
     }
     public static void validateNumArgs(String cmd, String[] args, int n) {
