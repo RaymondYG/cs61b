@@ -12,10 +12,9 @@ public class gitlet_rm {
     public static final File STAGE_DIR = join(GITLET_DIR, ".stage");
     public boolean stage_rm(String file){
         File file_path = Utils.join(CWD, file);
-        if(!STAGE_DIR.exists() || !(Utils.join(STAGE_DIR,Utils.sha1(Utils.readContentsAsString(file_path))).exists())){
+        if(!STAGE_DIR.exists() || !(Utils.join(STAGE_DIR,".file",Utils.sha1(Utils.readContentsAsString(file_path))).exists())){
             return false;
         }
-        commit_object.destroy_stage();
         return true;
     }
     public void error(){
@@ -39,8 +38,9 @@ public class gitlet_rm {
         }
         else{
             gitlet_add tmp_add = new gitlet_add(new Date(),
-                    join(CWD, file),
+                    join(CWD,file),
                     file);
+
             tmp_add.set_remove();
             tmp_add.add();
         }

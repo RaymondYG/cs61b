@@ -54,36 +54,8 @@ public class Main {
                     System.out.println("No changes added to the commit.");
                     System.exit(0);
                 }
-                stage_object obj_tmp = Utils.readObject(join(System.getProperty("user.dir"),
-                                        ".gitlet",
-                                                ".stage",
-                                                "stage_object"),
-                                                stage_object.class);
-
-                String parent_hash = Utils.readContentsAsString(join(new File(System.getProperty("user.dir")), ".gitlet","header"));
-                commit_object parent_commit = Utils.readObject(join(System.getProperty("user.dir"),
-                                ".gitlet",
-                                parent_hash),
-                                commit_object.class);
-                if (obj_tmp.remove){
-                    parent_commit.file_ref_dict.remove(obj_tmp.file_name);
-                    parent_commit.parent_ref = parent_hash;
-                    parent_commit.message = args[1];
-                    parent_commit.timestamp = new Date();
-                    Commit.dump_header(Commit.dump_commit(parent_commit));
-                    commit_object.destroy_stage();
-
-                }else{
-                    commit_object tmp_commit = new commit_object(parent_commit.timestamp,
-                            parent_commit.message,
-                            parent_commit.parent_ref,
-                            parent_commit.file_ref_dict);
-                    if (tmp_commit.update_by_stage(obj_tmp)){
-                        tmp_commit.parent_ref = parent_hash;
-                        tmp_commit.message = args[1];
-                        Commit.dump_header(Commit.dump_commit(tmp_commit));
-                    }
-                }
+                gitlet_commit tmp_commit = new gitlet_commit();
+                tmp_commit.update_by_stage(args[1]);
                 break;
             case "rm":
                 validateNumArgs("rm", args, 2);
@@ -95,11 +67,11 @@ public class Main {
                 gitlet_log.log();
                 break;
             case "global-log":
-                validateNumArgs("global-log", 1);
+                validateNumArgs("global-log", args,1);
                 gitlet_log.global_log();
                 break;
             case "find":
-                validateNumArgs("find", 2);
+                validateNumArgs("find", args,2);
                 gitlet_log.find(args[1]);
         }
     }

@@ -6,7 +6,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 public class stage_object implements Dumpable{
-    public void dump() {}
+    public void dump() {
+
+        String sha = Utils.sha1(Utils.serialize(this));
+
+
+        File file = Utils.join(new File(System.getProperty("user.dir")), ".gitlet", ".stage");
+        Utils.writeObject(Utils.join(file, sha), this);
+    }
     public Date timestamp;
     public File file_ref;
     public String file_hash;
