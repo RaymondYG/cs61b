@@ -20,10 +20,11 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V>{
         }
     }
     public node root;
-    public int size = 0;
+
 
     public void clear(){
         root = null;
+
     };
 
     public BSTMap(){
@@ -31,7 +32,6 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V>{
     }
     public BSTMap(K key, V value){
         root = new node(key, value);
-        size += 1;
     }
 
     /* Returns true if this map contains a mapping for the specified key. */
@@ -74,28 +74,42 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V>{
     };
 
     /* Returns the number of key-value mappings in this map. */
-    public int size(){return size;};
-
-    /* Associates the specified value with the specified key in this map. */
-    public void helper_put(K key, V value, )
-    public void put(K key, V value){
-
-
-        if(root == null){
-            root = new node(key, value);
-        }else{
-            node tmp_node = root;
-            while(true){
-
-                if(root.key.compareTo(key) > 0){
-                    tmp_node = tmp_node.right;
-                } else if (tmp_node.key.compareTo(key) < 0) {
-                    tmp_node = tmp_node.left;
-                } else{
-                    break;
-                }
+    public int size(){
+        int size = 0;
+        Stack<node> stack = new Stack<node>();
+        if (root == null){
+            return size;
+        }
+        stack.push(root);
+        size = 1;
+        while (!stack.empty()){
+            node tmp_node = stack.pop();
+            if(tmp_node.left!=null){
+                stack.push(tmp_node.left);
+                size += 1;
+            }
+            if(tmp_node.right!=null){
+                stack.push(tmp_node.right);
+                size += 1;
             }
         }
+        return size;
+    };
+
+    /* Associates the specified value with the specified key in this map. */
+    public node helper_put(K key, V value, node tmp){
+        if (tmp == null){
+            return new node(key, value);
+        }
+        if (tmp.key.compareTo(key) >0){
+            tmp.left = helper_put(key, value, tmp.left);
+        } else if (tmp.key.compareTo(key) <0) {
+            tmp.right = helper_put(key, value, tmp.right);
+        }
+        return tmp;
+    }
+    public void put(K key, V value){
+        root = helper_put(key, value, root);
 
     };
 
